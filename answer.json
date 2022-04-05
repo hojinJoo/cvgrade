@@ -1,0 +1,63 @@
+{
+    "task1_2_1": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 7.3
+        },
+        "baseline": {
+            "Filter": "MEDIAN,3",
+            "RMS": 8.0
+        }
+    },
+    "task1_2_2": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 8.4
+        },
+        "baseline": {
+            "Filter": "MEDIAN,7",
+            "RMS": 10.2
+        }
+    },
+    "task1_2_3": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 10.1
+        },
+        "baseline": {
+            "Filter": "BILATERAL,9",
+            "RMS": 11.1
+        }
+    },
+    "task1_2_4": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 7.994581958193593
+        },
+        "baseline": {
+            "Filter": "BILATERAL,9",
+            "RMS": 9.1631084
+        }
+    },
+    "task1_2_5": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 4.17
+        },
+
+        "baseline": {
+            "Filter": "BILATERAL,3",
+            "RMS": 4.34531026
+        }
+    },
+    "task1_2_6": {
+        "advanced": {
+            "Filter": null,
+            "RMS": 4.39349021219084
+        },
+        "baseline": {
+            "Filter": "BILATERAL,13",
+            "RMS": 4.447739105200675
+        }
+    }
+}
