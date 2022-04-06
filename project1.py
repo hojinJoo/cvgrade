@@ -6,7 +6,7 @@ import numpy as np
 import json
 from os.path import join as join
 
-from base import BaseGrader
+from base_grader import BaseGrader
 
 
 class Grader_task1(BaseGrader):
@@ -14,7 +14,7 @@ class Grader_task1(BaseGrader):
         super().__init__()
         self.prepare()
 
-    def grade(self):
+    def grade(self, task_num):
         print(self.PATH)
 
     def print_(self):

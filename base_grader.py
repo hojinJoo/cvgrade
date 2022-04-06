@@ -8,12 +8,10 @@ import numpy as np
 import json
 from os.path import join as join
 
-PROJCET_NUM = "1"
-
 
 class BaseGrader:
     def __init__(self):
-        self.PATH = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970"
+        self.SUBMISSION = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970"
         self.IMG_PATH = "/mnt/d/workspace/else/cvgrade/project1/test_images"
         self.ANSWER_PATH = "/mnt/d/workspace/else/cvgrade/project1/answer.json"
 
@@ -30,14 +28,34 @@ class BaseGrader:
             self.PATH) if os.path.isdir(join(self.PATH, submission))]
 
     @abstractmethod
-    def get_grade(self):
+    def get_grade(self, task_num):
         pass
 
+    def grade_all(self):
+        grade = {}
+        for sub in self.dirs:
+            try:
+                student_path = join(self.SUBMISSION, sub)
+                zip_file = os.listdir(student_path)[0]
+                student_ID = os.path.basename(zip_file).split("_")[0]
 
-class Uploader:
-    pass
+            with zipfile.ZipFile(join(student_path, zip_file), 'r') as zip_ref:
+                zip_ref.extractall(student_path)
 
-# 그리고 각 task 마다 GraderParent
+            tasks = sorted([task for task in os.listdir(
+                student_path) if os.path.isdir(join(student_path, task))])
+
+            for task in tasks:
+                task_path = join(student_path, task)
+                if task == "task1":
+                    for sub_task in ['denoise.py', 'noise.py']:
+                        self.get_grade()
+                else:
+
+        except Exception as e:
+            print("ERROR student ID : {}, {}".format(student_ID, e))
+
+        return grade
 
 
 class Solver:
