@@ -13,6 +13,7 @@ class BaseGrader:
         self.SUBMISSION = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970"
         self.IMG_PATH = "/mnt/d/workspace/else/cvgrade/project1/test_images"
         self.ANSWER_PATH = "/mnt/d/workspace/else/cvgrade/project1/answer.json"
+        self.STUDENTS = ""
 
     def read_image(self, img, color=True):
         if color:
@@ -27,7 +28,7 @@ class BaseGrader:
             self.PATH) if os.path.isdir(join(self.PATH, submission))]
 
     @abstractmethod
-    def get_grade(self, task_num):
+    def get_grade(self, task_num, *args):
         pass
 
     def grade_all(self):
@@ -55,10 +56,6 @@ class BaseGrader:
             print("ERROR student ID : {}, {}".format(student_ID, e))
 
         return grade
-
-
-def write(d, json=True):
-    pass
 
 
 if __name__ == "__main__":

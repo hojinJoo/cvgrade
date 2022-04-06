@@ -14,8 +14,24 @@ class Grader_task1(BaseGrader):
         super().__init__()
         self.prepare()
 
-    def grade(self, task_num):
-        print(self.PATH)
+    def grade(self, task_num, *args):
+        if task_num == "task1_1":
+            return self.task1_1()
+        elif task_num == "task1_2":
+            return self.task1_2()
+        elif task_num == "task2":
+            return self.task2()
+        else:
+            raise Exception("Wrong task num")
+        
+    def task1_1(self):
+        pass
+
+    def task1_2(self):
+        pass
+
+    def task2(self):
+        pass
 
     def print_(self):
         print(self.imgs)
