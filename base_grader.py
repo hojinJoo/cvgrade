@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from distutils.command.upload import upload
 from glob import glob
 import os
 import cv2
@@ -56,12 +55,6 @@ class BaseGrader:
             print("ERROR student ID : {}, {}".format(student_ID, e))
 
         return grade
-
-
-class Solver:
-    def __init__(self, grader, uploader):
-        self.grader = grader
-        self.uploader = uploader
 
 
 def write(d, json=True):
