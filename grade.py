@@ -11,25 +11,24 @@ from os.path import join as join
 PROJCET_NUM = "1"
 
 
-class GraderParent:
+class BasicGrader:
     pass
 
-class Uploader :
+
+class Uploader:
     pass
 
-# 그리고 각 task 마다 GraderParent 
+# 그리고 각 task 마다 GraderParent
 
-class Solver : 
-    def __init__(self,grader,uploader):
+
+class Solver:
+    def __init__(self, grader, uploader):
         self.grader = grader
         self.uploader = uploader
-        
+
 
 def write(d, json=True):
     pass
-
-
-
 
 
 if __name__ == "__main__":
