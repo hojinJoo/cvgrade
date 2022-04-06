@@ -1,4 +1,6 @@
+from distutils.command.upload import upload
 from glob import glob
+from msilib.schema import Class
 import os
 import cv2
 import zipfile
@@ -9,6 +11,19 @@ from os.path import join as join
 PROJCET_NUM = "1"
 
 
+class GraderParent:
+    pass
+
+class Uploader :
+    pass
+
+# 그리고 각 task 마다 GraderParent 
+
+class Solver : 
+    def __init__(self,grader,uploader):
+        self.grader = grader
+        self.uploader = uploader
+        
 
 def write(d, json=True):
     pass
