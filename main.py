@@ -1,2 +1,3 @@
-def write(d, json=True):
-    pass
+from base.base_grader import BaseGrader
+
+a = BaseGrader()

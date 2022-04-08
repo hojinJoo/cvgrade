@@ -6,13 +6,23 @@ import numpy as np
 import json
 from os.path import join as join
 
-from base_grader import BaseGrader
+from base.base_grader import BaseGrader
+
+
+class Image:
+    def __init__(self, imgs):
+        self.imgs = imgs
+        for k in self.imgs.keys():
+            if 'clean' in
 
 
 class Grader_task1(BaseGrader):
     def __init__(self):
         super().__init__()
         self.prepare()
+        self.img_wrapper = Image(self.imgs)
+        self.task_list = ['task_1_1', 'task_1_2', 'task_2']
+        self.OUTPUT = './project1/result.json'
 
     def grade(self, task_num, *args):
         if task_num == "task1_1":
@@ -23,7 +33,7 @@ class Grader_task1(BaseGrader):
             return self.task2()
         else:
             raise Exception("Wrong task num")
-        
+
     def task1_1(self):
         pass
 
@@ -37,35 +47,6 @@ class Grader_task1(BaseGrader):
         print(self.imgs)
 
 
-# def grade():
-#     imgs = {os.path.basename(img): read_image(img) if 'task1_2' in img else read_image(
-#         img, False) for img in glob(join(IMG_PATH, '*'))}
-
-#     dirs = [submission for submission in os.listdir(
-#         PATH) if os.path.isdir(join(PATH, submission))]
-
-#     for sub in dirs:
-#         try:
-#             student_path = join(PATH, sub)
-#             zip_file = os.listdir(student_path)[0]
-#             student_ID = os.path.basename(zip_file).split("_")[0]
-
-#             with zipfile.ZipFile(join(student_path, zip_file), 'r') as zip_ref:
-#                 zip_ref.extractall(student_path)
-
-#             tasks = sorted([task for task in os.listdir(
-#                 student_path) if os.path.isdir(join(student_path, task))])
-
-#             for task in tasks:
-#                 task_path = join(student_path, task)
-#                 if task == "task1":
-#                     for sub_task in ['denoise.py', 'noise.py']:
-
-#                 else:
-
-#         except Exception as e:
-#             print("ERROR student ID : {}, {}".format(student_ID, e))
-
 if __name__ == "__main__":
     a = Grader_task1()
-    a.grade()
+    a.write_format()
