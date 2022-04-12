@@ -44,8 +44,9 @@ class BaseGrader:
     def update_json(self, student_ID, task, grade):
         self.OUTPUT[student_ID][task] = grade
         with open(self.OUTPUT, 'w') as w:
-            json.dump(self.OUTPUT)
-        pass
+            json.dump(self.OUTPUT, w)
+        with open(self.OUTPUT, 'r') as r:
+            self.OUTPUT = json.load(r)
 
     def is_done(self, student_ID, task):
         # TODO
@@ -58,10 +59,10 @@ class BaseGrader:
             return cv2.imread(img, cv2.IMREAD_GRAYSCALE)
 
     def prepare(self):
-        self.imgs = {os.path.basename(img): self.read_image(img) if 'task1_2' in img else self.read_image(
-            img, False) for img in glob(join(self.IMG_PATH, '*'))}
-        # self.dirs = [submission for submission in os.listdir(
-        #     self.SUBMISSION) if os.path.isdir(join(self.SUBMISSION, submission))]
+        # self.imgs = {os.path.basename(img): self.read_image(img) if 'task1_2' in img else self.read_image(
+        #     img, False) for img in glob(join(self.IMG_PATH, '*'))}
+        self.dirs = [submission for submission in os.listdir(
+            self.SUBMISSION) if os.path.isdir(join(self.SUBMISSION, submission))]
 
     @abstractmethod
     def get_grade(self, task_num, *args):
