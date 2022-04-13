@@ -11,7 +11,7 @@ import sys
 #__all__ = ["BaseGrader"]
 
 
-DONE = 1
+DONE = True
 ERROR = -1
 
 
@@ -37,8 +37,8 @@ class BaseGrader:
 
                 student_path = join(self.SUBMISSION, sub)
                 zip_file = os.listdir(student_path)[0]
-                student_ID = os.path.basename(zip_file).split("_")[0]
-                print("\n====>Grading {}\n".format(student_ID))
+                student_ID = os.path.basename(zip_file)[:10]
+                print("====>Grading {}".format(student_ID))
 
                 if os.path.exists(join(student_path, student_ID)):
                     shutil.rmtree(join(student_path, student_ID))
@@ -52,23 +52,23 @@ class BaseGrader:
                 else:
                     tasks = [task for task in os.listdir(join(
                         student_path, student_ID)) if os.path.isdir(join(student_path, student_ID, task)) and self.mode in join(student_path, student_ID, task)]
-
                 for task in tasks:
                     if self._is_done(student_ID, task):
-                        print(self.grades)
+                        print("SKIP")
                         continue
-                    task_path = join(student_path, task)
 
+                    task_path = join(student_path, student_ID, task)
                     task_grade = self.get_grade(task, task_path, student_ID)
-                    self._update_dict(student_ID, task, 1, task_grade)
+                    self._update_dict(task, student_ID, True, task_grade)
+                print("====>Grading  {} END".format(student_ID))
 
             except Exception as e:
 
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                print("ERROR student ID : {}, {} Error type : {} Error line : {}".format(
-                    student_ID, e, exc_type, exc_tb.tb_lineno))
-                self.grades[student_ID]["ERROR"] = e
+                print("ERROR student ID : {}, {} Error type : {} Error line : {} file : {}".format(
+                    student_ID, e, exc_type, exc_tb.tb_lineno, fname))
+                self._update_dict(task, student_ID, "ERROR", task_grade)
 
             finally:
                 shutil.rmtree(join(student_path, student_ID))
@@ -80,6 +80,8 @@ class BaseGrader:
     def _update_dict(self, task_num, st_id, state, grade=-1):
         self.grades[st_id][task_num]['state'] = state
         self.grades[st_id][task_num]['grade'] = grade
+
+        pass
 
     def _update_json(self):
         os.remove(self.OUTPUT)
@@ -104,7 +106,7 @@ class BaseGrader:
             self.SUBMISSION) if os.path.isdir(join(self.SUBMISSION, submission))]
         pass
 
-    def _set_grades(self):
+    def _set_result(self):
         if os.path.exists(self.OUTPUT):
             print("RESULT ALREADY EXISTS IN {}".format(self.OUTPUT))
             return

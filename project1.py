@@ -18,7 +18,6 @@ class Image:
             join(path, 'task1_1.jpg'), cv2.IMREAD_GRAYSCALE)
         self.task1_2 = {}
         self.task2 = {}
-
         self._task1_2_image()
 
     def get_image(self, task_num):
@@ -31,24 +30,25 @@ class Image:
         for i in range(1, 7):
             self.task1_2["task1_2_" + str(i)] = {}
             d = self.task1_2["task1_2_" + str(i)]
-            d['clean'] = join(self.path, 'task1_2_'+str(i) + 'clean.jpg')
-            d['noise'] = join(self.path, 'task1_2_'+str(i) + 'noise.jpg')
+            d['clean'] = join(self.path, 'task1_2_'+str(i) + '_clean.jpg')
+            d['noise'] = join(self.path, 'task1_2_'+str(i) + '_noise.jpg')
+        pass
 
     def _get_image(self, task_num):
-        if task_num == "1_1":
+        if task_num == "task1_1":
             return self.task1_1
-        elif task_num == '1_2':
+        elif task_num == 'task1_2':
             return self.task1_2
         else:
             return self.task2
 
     def _get_answers(self, task_num):
-        if task_num == "1_1":
+        if task_num == "task1_1":
             return {"gaussian": [29.81, 30.01], "uniform": [16.80, 16.89], "impulse": [51.74, 52.06]}
-        elif task_num == "1_2":
+        elif task_num == "task1_2":
             with open('./project1/answer.json') as r:
                 answer = json.load(r)
-            return a
+            return answer
 
 
 class Grader_task1(BaseGrader):
@@ -56,14 +56,15 @@ class Grader_task1(BaseGrader):
         super().__init__(mode)
 
         self.OUTPUT = "./project1/result.json"
-        self.SUBMISSION = "/mnt/c/Users/hj/Desktop/downloads/CV_project1"
+        #self.SUBMISSION = "/mnt/c/Users/hj/Desktop/downloads/CV_project1"
+        self.SUBMISSION = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970 (2)"
         self.IMG_PATH = "./project1/test_images"
         self.ANSWER_PATH = "./project1/answer.json"
         self.student_ID_List_PATH = "./base/student_ID_list.json"
         self.imgs = Image(self.IMG_PATH)
-        self.task_list = ['task1', 'task2']
+        self.task_list = ['task1_1', 'task1_2', 'task2']
         self._prepare()
-        self._set_grades()
+        self._set_result()
 
     def get_grade(self, task_num, path, studentID, *args):
 
@@ -76,13 +77,10 @@ class Grader_task1(BaseGrader):
 
     def task1(self, path, studentID):
 
-        d = {}
-        d['task1_1'] = self.task1_1(path, studentID)
-        d['task1_2'] = self.task1_2(path, studentID)
-        return d
+        return [self.task1_1(path, studentID), self.task1_2(path, studentID)]
 
     def task1_1(self, path, studentID):
-        print("\n====>Grading {} task1_1\n".format(studentID))
+        print("====>Grading {} task1_1".format(studentID))
 
         sys.path.append(path)
         noise = importlib.import_module('noise', ".".join(path.split("/")))
@@ -110,24 +108,26 @@ class Grader_task1(BaseGrader):
         d['impulse']['rms'] = rms(img, impulse)
 
         for f in ['gaussian', 'uniform', 'impulse']:
-            rms = d[f]['rms']
+            _rms = d[f]['rms']
             inboundary = False
-            if rms > answers[f][0] and rms < answers[f][1]:
+            if _rms > answers[f][0] and _rms < answers[f][1]:
                 inboundary = True
             d[f]['in_boundary'] = inboundary
 
         sys.path.pop()
         del sys.modules['noise']
+        print("====>Grading {} task1_1 END".format(studentID))
+
         return d
 
     def task1_2(self, path, studentID):
 
-        print("\n====>Grading {} task1_2\n".format(studentID))
+        print("====>Grading {} task1_2".format(studentID))
         sys.path.append(path)
-        denoise = importlib.import_module(
-            'denoise', '.'.join(path, split('/')))
 
+        denoise = importlib.import_module('denoise', ".".join(path.split("/")))
         task1_2 = getattr(denoise, 'task1_2')
+
         median = getattr(denoise, 'apply_median_filter')
         bilateral = getattr(denoise, 'apply_bilateral_filter')
         my = getattr(denoise, "apply_my_filter")
@@ -136,69 +136,81 @@ class Grader_task1(BaseGrader):
         imgs = img_data['image']
         answers = img_data['answer']
 
-        filter_implementation = {}  # TODO:
-
+        filter_implementation = {}  # TODO: filter aguments
         result_task12 = {}
 
         for i in range(1, 7):
             name = 'task1_2_' + str(i)
-            noise_img = imgs['image'][name]['noise']
-            clean_img = imgs['image'][name]['clean']
+
+            noise_img = imgs[name]['noise']
+            clean_img = imgs[name]['clean']
             dst = join(path, 'result.jpg')
+
             task1_2(noise_img, clean_img, dst)
 
             noise_img_read = cv2.imread(noise_img)
             result_read = cv2.imread(dst)
 
-            rms = calculate_rms(noise_img_read, result_read)
+            _rms = calculate_rms(noise_img_read, result_read)
 
             label = ""
-            if rms < answers[name]['advanced']['RMS']:
+            if _rms < answers[name]['advanced']['RMS']:
                 label = "advanced"
-            elif rms < answers[name]['baseline']['RMS']:
+            elif _rms < answers[name]['baseline']['RMS']:
                 label = 'baseline'
             else:
                 label = "out"
 
             result_task12[name] = {}
-            result_task12[name]['rms'] = rms
+            result_task12[name]['rms'] = _rms
             result_task12[name]['label'] = label
 
         sys.path.pop()
         del sys.modules['denoise']
+        print("====>Grading {} task1_2 END".format(studentID))
+
         return result_task12
 
     def task2(self, path):
         pass
 
-    def _update_dict(self, task_num, st_id, state, grade=-1):
+    def _is_done(self, student_ID, task):
+        if task == 'task1':
+            return self.grades[student_ID]["task1_1"]['state'] == True and self.grades[student_ID]["task1_2"]['state'] == True
+        elif task == 'task2':
+            return self.grades[student_ID]["task2"]['state'] == True
+        else:
+            return self.grades[student_ID]["task1_1"]['state'] == True and self.grades[student_ID]["task1_2"]['state'] == True and self.grades[student_ID]["task2"]['state'] == True
 
+    def _update_dict(self, task_num, st_id, state, grade=-1):
         if task_num == 'task1':
-            self.grades[st_id]['task1_1']['state'] = 1
-            self.grades[st_id]['task1_2']['state'] = 1
+
+            self.grades[st_id]['task1_1']['state'] = state
+            self.grades[st_id]['task1_2']['state'] = state
             self.grades[st_id]['task1_1']['grade'] = grade[0]
             self.grades[st_id]['task1_2']['grade'] = grade[1]
         else:
+
             self.grades[st_id][task_num]['state'] = state
             self.grades[st_id][task_num]['grade'] = grade
 
-    def _set_grades(self):
+    def _set_result(self):
         if os.path.exists(self.OUTPUT):
             print("RESULT ALREADY EXISTS IN {}".format(self.OUTPUT))
-
+            with open(self.OUTPUT, 'r') as r:
+                self.grades = json.load(r)
         else:
             with open(self.student_ID_List_PATH, 'r') as r:
                 self.student_id_list = json.load(r)
             for id in self.student_id_list:
                 self.grades[id] = {}
                 d = self.grades[id]
-                d['ERROR'] = -1
+                d['ERROR'] = False
                 for t in self.task_list:
                     d[t] = {'state': -1}
-
+            # os.remove(self.OUTPUT)
             with open(self.OUTPUT, 'w') as w:
                 json.dump(self.grades, w, indent=4)
-
         pass
 
 
