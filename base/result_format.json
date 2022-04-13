@@ -1,7 +1,11 @@
 {
     "STUDENT_ID" :
         {
-            "task#" : -1,
+            
+            "task#" : {
+                "state" : -1,
+                "grade" : 0
+            },
             "total" : -1
         }
 }

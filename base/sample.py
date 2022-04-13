@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 TA_ID = '2022311491'
 TA_PW = 'davidluiz4!'
 
-SCORE_PAGE = "https://www.learnus.org/grade/report/grader/index.php?id=208457"
+SCORE_PAGE = "https://www.learnus.org/user/users.php?contextid=4311367&roleid=0&id=208457&perpage=5000&accesssince=0&search=&group=0&accesssince=0&roleid=5&search="
 
 
 chrome_options = webdriver.ChromeOptions()
@@ -69,12 +69,17 @@ def enter_student_info():
     time.sleep(3)
     DRIVER.implicitly_wait(5)
     # print(By.CSS_SELECTOR())
-    table = DRIVER.find_elements(By.CSS_SELECTOR, ".useridnumber.cell.c2")
+    table = DRIVER.find_elements(
+        By.CSS_SELECTOR, ".cell.c4.idnumber.txt-center.column-idnumber")
+    # print(table)
     # print(table)
     for t in table:
 
         student_id = t.text
         # print(student_id)
+        if student_id == "":
+            break
+        print(student_id)
         l.append(student_id)
         #t = d[student_id]
         #t['task_1_1'] = -1
@@ -91,7 +96,7 @@ def enter_student_info():
 
         # except Exception as E:
         #     print("Error raise: ", E)
-    with open('student_ID.json', 'w') as w:
+    with open('student_ID_list.json', 'w') as w:
         json.dump(sorted(l), w, indent=4)
 
 
