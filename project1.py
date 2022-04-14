@@ -56,8 +56,8 @@ class Grader_task1(BaseGrader):
         super().__init__(mode)
 
         self.OUTPUT = "./project1/result.json"
-        #self.SUBMISSION = "/mnt/c/Users/hj/Desktop/downloads/CV_project1"
-        self.SUBMISSION = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970 (2)"
+        self.SUBMISSION = "/mnt/c/Users/hj/Desktop/downloads/CV_project1"
+        # self.SUBMISSION = "/mnt/d/chrome/COMPUTER VISION (CSI4116.01-00)-Project1-2736970 (2)"
         self.IMG_PATH = "./project1/test_images"
         self.ANSWER_PATH = "./project1/answer.json"
         self.student_ID_List_PATH = "./base/student_ID_list.json"
@@ -139,6 +139,19 @@ class Grader_task1(BaseGrader):
         filter_implementation = {}  # TODO: filter aguments
         result_task12 = {}
 
+        filter_implementation['median'] = {}
+        filter_implementation['median']['rms'] = calculate_rms(
+            cv2.imread(imgs['task1_2_1']['clean']), median(cv2.imread(imgs['task1_2_1']['noise']), 3))
+        filter_implementation['median']['inboundary'] = ('in' if
+                                                         filter_implementation['median']['rms'] < 8 else 'out')
+        filter_implementation['bilateral'] = {}
+        filter_implementation['bilateral']['rms'] = calculate_rms(
+            cv2.imread(imgs['task1_2_1']['clean']), bilateral(cv2.imread(imgs['task1_2_1']['noise']), 3, 75, 75))
+        filter_implementation['bilateral']['inboundary'] = ('in' if
+                                                            filter_implementation['bilateral']['rms'] < 46 else 'out')
+
+        # filter_implementation['my'] = calculate_rms(img_data['task1_2_1']['clean'],median(cv2.imread(img_data['task1_2_1']['noise']),3))
+
         for i in range(1, 7):
             name = 'task1_2_' + str(i)
 
@@ -164,12 +177,13 @@ class Grader_task1(BaseGrader):
             result_task12[name] = {}
             result_task12[name]['rms'] = _rms
             result_task12[name]['label'] = label
-
+        d = {'Filter implementation': filter_implementation,
+             'Denoise': result_task12}
         sys.path.pop()
         del sys.modules['denoise']
         print("====>Grading {} task1_2 END".format(studentID))
 
-        return result_task12
+        return d
 
     def task2(self, path):
         pass
@@ -217,6 +231,7 @@ class Grader_task1(BaseGrader):
 def rms(img1, img2):
     # This function calculates RMS error between two grayscale images.
     # Two images should have same sizes.
+
     if (img1.shape[0] != img2.shape[0]) or (img1.shape[1] != img2.shape[1]):
         raise Exception("img1 and img2 should have the same sizes.")
 

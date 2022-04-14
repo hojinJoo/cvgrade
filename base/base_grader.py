@@ -8,7 +8,7 @@ import json
 from os.path import join as join
 import shutil
 import sys
-#__all__ = ["BaseGrader"]
+# __all__ = ["BaseGrader"]
 
 
 DONE = True
@@ -25,6 +25,7 @@ class BaseGrader:
         self.OUTPUT = ""
         self.grades = {}
         self.mode = mode
+        self.errors = []
 
     @abstractmethod
     def get_grade(self, task_num, path, studentID, *args):
@@ -34,11 +35,13 @@ class BaseGrader:
 
         for sub in self.dirs:
             try:
-
+                # try:
+                #     for sub in self.dirs:
+                name = sub.split('-')[0]
                 student_path = join(self.SUBMISSION, sub)
                 zip_file = os.listdir(student_path)[0]
                 student_ID = os.path.basename(zip_file)[:10]
-                print("====>Grading {}".format(student_ID))
+                print("====>Grading NAME : {} ID : {}".format(name, student_ID))
 
                 if os.path.exists(join(student_path, student_ID)):
                     shutil.rmtree(join(student_path, student_ID))
@@ -46,33 +49,59 @@ class BaseGrader:
                 with zipfile.ZipFile(join(student_path, zip_file), 'r') as zip_ref:
                     zip_ref.extractall(join(student_path, student_ID))
 
+                zip_path = join(student_path, student_ID)
+
+                # submission spec violation handling
+                if len(os.listdir(zip_path)) != 3:
+                    if len(os.listdir(zip_path)) == 1:
+                        another_dir = os.listdir(
+                            join(student_path, student_ID))[0]
+                        zip_path = join(student_path, student_ID, another_dir)
+                    else:
+                        self.errors.append(student_ID)
+                        print("[ERROR] {} SKIP".format(student_ID))
+                        raise Exception(
+                            '***Directory Structure Wrong!***\tID : {}'.format(student_ID))
+
                 if self.mode == "all":
-                    tasks = sorted([task for task in os.listdir(join(
-                        student_path, student_ID)) if os.path.isdir(join(student_path, student_ID, task))])
+                    tasks = sorted([task for task in os.listdir(
+                        zip_path) if os.path.isdir(join(zip_path, task))])
                 else:
-                    tasks = [task for task in os.listdir(join(
-                        student_path, student_ID)) if os.path.isdir(join(student_path, student_ID, task)) and self.mode in join(student_path, student_ID, task)]
+                    tasks = [task for task in os.listdir(zip_path) if os.path.isdir(
+                        join(zip_path, task)) and self.mode in join(zip_path, task)]
                 for task in tasks:
                     if self._is_done(student_ID, task):
-                        print("SKIP")
+                        print("<SKIP> {} {}".format(student_ID, task))
                         continue
 
-                    task_path = join(student_path, student_ID, task)
+                    task_path = join(zip_path, task)
                     task_grade = self.get_grade(task, task_path, student_ID)
                     self._update_dict(task, student_ID, True, task_grade)
-                print("====>Grading  {} END".format(student_ID))
+                print("====>Grading END! NAME : {} ID :  {}\n".format(
+                    name, student_ID))
+                # self._update_json()
+                shutil.rmtree(join(student_path, student_ID))
 
             except Exception as e:
-
                 exc_type, exc_obj, exc_tb = sys.exc_info()
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 print("ERROR student ID : {}, {} Error type : {} Error line : {} file : {}".format(
                     student_ID, e, exc_type, exc_tb.tb_lineno, fname))
-                self._update_dict(task, student_ID, "ERROR", task_grade)
-
+                #self._update_dict(task, student_ID, "ERROR", task_grade)
+                self.grades[student_ID]["ERROR"] = True
+                pass
+        # except Exception as e:
+        #     exc_type, exc_obj, exc_tb = sys.exc_info()
+        #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #     print("ERROR student ID : {}, {} Error type : {} Error line : {} file : {}".format(
+        #         student_ID, e, exc_type, exc_tb.tb_lineno, fname))
+        #     # self._update_dict(task, student_ID, "ERROR", task_grade)
+        #     self.grades[student_ID]["ERROR"] = True
             finally:
-                shutil.rmtree(join(student_path, student_ID))
                 self._update_json()
+
+        with open('errors.json', 'w') as w:
+            json.dump(self.errors, w)
 
         pass
         # return grade

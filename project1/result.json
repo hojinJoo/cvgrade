@@ -12,7 +12,7 @@
         }
     },
     "2012147564": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -312,7 +312,7 @@
         }
     },
     "2017142075": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -468,7 +468,7 @@
         }
     },
     "2017147562": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -684,7 +684,7 @@
         }
     },
     "2018147516": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -744,7 +744,7 @@
         }
     },
     "2018147536": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -792,7 +792,7 @@
         }
     },
     "2018147546": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -828,20 +828,20 @@
         }
     },
     "2018147559": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": true,
             "grade": {
                 "gaussian": {
-                    "rms": 29.813599105078886,
-                    "in_boundary": true
+                    "rms": 29.80488468691389,
+                    "in_boundary": false
                 },
                 "uniform": {
-                    "rms": 16.817921183117303,
+                    "rms": 16.833083620839727,
                     "in_boundary": true
                 },
                 "impulse": {
-                    "rms": 51.07150744740965,
+                    "rms": 51.13790892207773,
                     "in_boundary": false
                 }
             }
@@ -849,29 +849,41 @@
         "task1_2": {
             "state": true,
             "grade": {
-                "task1_2_1": {
-                    "rms": 46.23717490229009,
-                    "label": "out"
+                "Filter implementation": {
+                    "median": {
+                        "rms": 7.829447231448657,
+                        "inboundary": "in"
+                    },
+                    "bilateral": {
+                        "rms": 40.429050852206565,
+                        "inboundary": "in"
+                    }
                 },
-                "task1_2_2": {
-                    "rms": 22.879088241083036,
-                    "label": "out"
-                },
-                "task1_2_3": {
-                    "rms": 17.257377724831198,
-                    "label": "out"
-                },
-                "task1_2_4": {
-                    "rms": 14.028829734710241,
-                    "label": "out"
-                },
-                "task1_2_5": {
-                    "rms": 6.768487598827961,
-                    "label": "out"
-                },
-                "task1_2_6": {
-                    "rms": 10.570540102665563,
-                    "label": "out"
+                "Denoise": {
+                    "task1_2_1": {
+                        "rms": 46.23717490229009,
+                        "label": "out"
+                    },
+                    "task1_2_2": {
+                        "rms": 22.879088241083036,
+                        "label": "out"
+                    },
+                    "task1_2_3": {
+                        "rms": 17.257377724831198,
+                        "label": "out"
+                    },
+                    "task1_2_4": {
+                        "rms": 14.028829734710241,
+                        "label": "out"
+                    },
+                    "task1_2_5": {
+                        "rms": 6.768487598827961,
+                        "label": "out"
+                    },
+                    "task1_2_6": {
+                        "rms": 10.570540102665563,
+                        "label": "out"
+                    }
                 }
             }
         },
@@ -1024,7 +1036,7 @@
         }
     },
     "2019147530": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -1144,7 +1156,7 @@
         }
     },
     "2020147514": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -1276,7 +1288,7 @@
         }
     },
     "2022846154": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
             "state": -1
         },
@@ -1312,12 +1324,64 @@
         }
     },
     "2022846241": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
-            "state": -1
+            "state": true,
+            "grade": {
+                "gaussian": {
+                    "rms": 29.946302939076965,
+                    "in_boundary": true
+                },
+                "uniform": {
+                    "rms": 16.834324948958287,
+                    "in_boundary": true
+                },
+                "impulse": {
+                    "rms": 51.1237856869812,
+                    "in_boundary": false
+                }
+            }
         },
         "task1_2": {
-            "state": -1
+            "state": true,
+            "grade": {
+                "Filter implementation": {
+                    "median": {
+                        "rms": 7.829447231448657,
+                        "inboundary": "in"
+                    },
+                    "bilateral": {
+                        "rms": 40.368767569762184,
+                        "inboundary": "in"
+                    }
+                },
+                "Denoise": {
+                    "task1_2_1": {
+                        "rms": 46.23717490229009,
+                        "label": "out"
+                    },
+                    "task1_2_2": {
+                        "rms": 20.265393221762082,
+                        "label": "out"
+                    },
+                    "task1_2_3": {
+                        "rms": 18.286036374843054,
+                        "label": "out"
+                    },
+                    "task1_2_4": {
+                        "rms": 14.611843504097466,
+                        "label": "out"
+                    },
+                    "task1_2_5": {
+                        "rms": 5.285736010409603,
+                        "label": "out"
+                    },
+                    "task1_2_6": {
+                        "rms": 10.666296142050893,
+                        "label": "out"
+                    }
+                }
+            }
         },
         "task2": {
             "state": -1
@@ -1348,12 +1412,64 @@
         }
     },
     "2022846384": {
-        "ERROR": false,
+        "ERROR": true,
         "task1_1": {
-            "state": -1
+            "state": true,
+            "grade": {
+                "gaussian": {
+                    "rms": 29.929100757630884,
+                    "in_boundary": true
+                },
+                "uniform": {
+                    "rms": 16.834970846822067,
+                    "in_boundary": true
+                },
+                "impulse": {
+                    "rms": 48.823596753728886,
+                    "in_boundary": false
+                }
+            }
         },
         "task1_2": {
-            "state": -1
+            "state": true,
+            "grade": {
+                "Filter implementation": {
+                    "median": {
+                        "rms": 7.827238283903554,
+                        "inboundary": "in"
+                    },
+                    "bilateral": {
+                        "rms": 1483.9003410904977,
+                        "inboundary": "out"
+                    }
+                },
+                "Denoise": {
+                    "task1_2_1": {
+                        "rms": 46.23831482024492,
+                        "label": "out"
+                    },
+                    "task1_2_2": {
+                        "rms": 23.427872605695857,
+                        "label": "out"
+                    },
+                    "task1_2_3": {
+                        "rms": 21.72742929096192,
+                        "label": "out"
+                    },
+                    "task1_2_4": {
+                        "rms": 16.961345904790715,
+                        "label": "out"
+                    },
+                    "task1_2_5": {
+                        "rms": 7.529498488108992,
+                        "label": "out"
+                    },
+                    "task1_2_6": {
+                        "rms": 11.527737080177339,
+                        "label": "out"
+                    }
+                }
+            }
         },
         "task2": {
             "state": -1
